@@ -72,14 +72,14 @@ static status prepareData(ExcerciseType *data)
     }
 
 
-    printf("\n Liczba testów: %d ", data->TestCount);
+    printf("\n Liczba testow: %d ", data->TestCount);
     for(uint8_t j=0; j<BYTES_OF_CYPHER; j++)
     {
         printf("\n Cypher[%d]: %d ",j, data->Cypher[j]);
     }
      printf("\n Liczba SLOW: %d ", data->howManyWords);
 
-    for(uint8_t x=0; x<BYTES_OF_CYPHER; x++)
+    for(uint8_t x=0; x<3; x++)
     {
         printf("\n WORDS[%d]: %c ",x, data->words[0][x]);
     }
@@ -91,11 +91,15 @@ static status prepareData(ExcerciseType *data)
 void StartProgram()
 {
 
-    scanf("%[^EOF]i", data.input);
 
+//while (1 == scanf("%[^EOF]%*c", data.input))
+   // scanf("%[^EOF]i", data.input);
+
+    while(scanf("%c", data.input)!=EOF){};
+
+
+    printf("\n Algorytm start ! ");
     prepareData(&data);
-
-    system("pause");
 
 }
 

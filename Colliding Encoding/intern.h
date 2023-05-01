@@ -10,7 +10,7 @@
 #include <stdbool.h>
 
 #define CYPHER_LENGTH           26
-#define BUFOR_LENGTH            200
+#define BUFOR_LENGTH            512
 #define OFFSET_IN_BUFFOR        2
 #define SIZE_OF_ENDLINE         1
 #define BYTE_NUMER_OF_TESTS     0
