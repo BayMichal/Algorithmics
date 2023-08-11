@@ -4,11 +4,13 @@
 * Details:    Intern implementation for Excercise Colliding Encoding Google
 *********************************************************************/
 /*************************** HEADER FILES ***************************/
-#include "intern.h"
-#include "md2.h"
 #include <stdio.h>
 #include <string.h>
 #include <memory.h>
+#include "defines.h"
+#include "intern.h"
+#include "md2.h"
+#include "ascii-table.h"
 
 #define DEBUG
 
@@ -159,13 +161,9 @@ static status prepareData(InputDataType *data, HashDataType* hashData)
         }
         printf("\n Liczba SLOW: %d ", data->howManyWords);
 
-        for(uint8_t x=0; x<MAX_SIZE_WORDS; x++)
+        for(uint8_t x=0; x<15; x++)
         {
             printf("\n WORDS[%d]: %c ",x, data->words[0][x]);
-        }
-        for(uint8_t y=0; y<MAX_SIZE_WORDS; y++)
-        {
-            printf("\n HASH[%d]: %c ",y, data->hash[y]);
         }
     #endif /* InputDataDebug */
 
@@ -173,7 +171,7 @@ static status prepareData(InputDataType *data, HashDataType* hashData)
 }
 
 
-static status inputData(InputDataType *data)
+inline static status inputData(InputDataType *data)
 {
     int i=0;
     int c;
@@ -195,9 +193,195 @@ static status inputData(InputDataType *data)
 }
 
 
-void StartProgram()
+static status alphaBett(uint8_t *ascii, InputDataType *data, uint8_t *CounterUpdate)
 {
-    inputData(&data);
-    prepareData(&data, &HashData);
+    status retVal = NOT_OK;
+
+
+    /* Guard empty data */
+    if(data == NULL)
+    {
+        printf("\n Eror empty data");
+    }
+    else
+    {
+        /* to calculate witch index in cyper is
+        * start counter_cypher=0
+        *
+        * counter_cypher++          | A
+        * counter_cypher++          | B
+        * counter_cypher++          | C
+        * [...]
+        */
+        uint8_t counter_cypher = 0u;
+
+        /* output index data */
+        uint8_t counter_data = *CounterUpdate;
+
+        for(uint8_t i=(uint8_t)A_UPPER; i<(uint8_t)Z_UPPER; i++)
+        {
+            if(*ascii == (uint8_t)i)
+            {
+                printf("\n alphaBett_ %c _  data->output[%d] = %d ",*ascii, counter_data, data->Cypher[counter_cypher]);
+                data->output[counter_data] = data->Cypher[counter_cypher];
+                break;
+            }
+            counter_cypher++;
+        }
+
+        printf("\n ZATRZYMALEM SIE NA %d ", counter_data);
+        retVal = OK;
+    }
+
+    return retVal;
+}
+
+static status calculateData(InputDataType *data)
+{
+    status retVal = NOT_OK;
+
+    printf("\n\n\n");
+
+    /* Guard empty data */
+    if(data == NULL)
+    {
+        printf("\n Eror empty data");
+    }
+    else
+    {
+            /* in buf:
+            * A |
+            * B | 1 WORD
+            * C |
+            *   | counterWord++;
+            * C |
+            * B | 2 WORD
+            * [...]
+            *   | counterWord++
+            *   | break (secound in row NULL at data)
+            */
+            uint8_t counterWord = 0u;
+            
+            /* in buf:
+            * A |                   | test++
+            * B | 1 WORD            | test++
+            * C |                   | buf[test] = MY_ASCII_CHAR && test++
+            *   | counterWord++;    | test++
+            * C |                   | buf[test] = MY_ASCII_CHAR && test++
+            * B | 2 WORD            | test++
+            * [...]                 | [...]
+            *   | end
+            */
+            uint8_t SpaceCounter = 0u;
+
+            for(uint8_t j=0u; j<MAX_SIZE_WORDS; j++)
+            {
+                /* Guard case*/
+                if(data->words[0][j] == _NULL && data->words[0][j+1] == _NULL)
+                {
+                    break;
+                }
+                /* Counter case*/
+                else if (data->words[0][j] == _NULL ||  data->words[0][j] == 0x0a)
+                {
+                    data->output[SpaceCounter] = MY_ASCII_NEW_LINE;
+                    counterWord++;
+                    SpaceCounter++;
+                }
+                /* Data case  */
+                else
+                {
+                    alphaBett(&data->words[0][j], data, &SpaceCounter);
+                    SpaceCounter++;
+                }
+                
+            }
+        data->outputSize =  (SpaceCounter-2u);          /* Update final size*/
+        data->output[SpaceCounter] = MY_END_ASCII;      /* Marked last byte in final buf */
+        
+        retVal = OK;
+    }
+
+    return retVal;
+}
+
+
+static status calculate(InputDataType *data)
+{
+    status retVal = NOT_OK;
+
+  printf("\n \n");
+    /* Guard empty data */
+    if(data->outputSize == 0 || data->output == NULL)
+    {
+        printf("\n Eror empty data");
+    }
+    else
+    {
+        uint8_t counter = 0u;
+        uint8_t previos = 0u;
+        long int MeaValues[MAX_WORDS] = {0};
+
+        for(uint8_t i=0u; i<=(data->outputSize+1); i++)
+        {
+            // printf("\n NOWY ZNAK %d", i);
+            /* New line means new packet of data to calculate */
+            if( data->output[i] == MY_ASCII_NEW_LINE)
+            {
+                /* remember cypher */
+                for(uint8_t x=previos; x<i; x++)
+                {
+                    MeaValues[counter] = data->output[x] << (x*8);
+                }
+
+                printf("\n test = %ld ",  MeaValues[counter]);
+                       
+                previos = i+1;
+                counter++;
+            }
+        }
+
+        for(uint8_t j=0; j<counter; j++)
+        {
+            for(uint8_t k=0; k<counter-1; k++)
+            {
+                if(k != j)
+                {
+                    if(MeaValues[j] == MeaValues[k])
+                    {
+                        printf(" \n\n WYNIK: POWTARZA SIE  [%d] %ld =  [%d] %ld ",j, MeaValues[j],k, MeaValues[k] );
+                        retVal = OK;
+                        break;
+                    } 
+                }
+
+            }
+            if(retVal == OK)    
+                break;
+        }
+
+    }
+
+    return retVal;
+}
+
+
+status StartProgram(void)
+{
+    status retVal = NOT_OK;
+    
+    retVal |= inputData(&data);
+    printf("\n STATUS 1 %s ",  retVal ? "OK" : "NOT_OK");
+
+    retVal |= prepareData(&data, &HashData);
+    printf("\n STATUS 2 %s ",  retVal ? "OK" : "NOT_OK");
+
+    retVal |= calculateData(&data);
+    printf("\n STATUS 3 %s ",  retVal ? "OK" : "NOT_OK");
+
+    retVal |= calculate(&data);
+    printf("\n STATUS 4 %s ",  retVal ? "OK" : "NOT_OK");
+
+    return (retVal ? OK : NOT_OK);
 }
 

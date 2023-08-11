@@ -16,7 +16,8 @@
 /*********************** MAIN FUNCTION DEF *************************/
 int main()
 {
-   StartProgram();
-
+   status retVal = NOT_OK;
+   retVal = StartProgram();
+   printf("\n Request: %s ", retVal ? "OK" : "NOT_OK");
    return 0;
 }

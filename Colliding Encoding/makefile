@@ -15,7 +15,7 @@ main:  clean CONFIG_DIR
 	./build/kickstar_one.exe
 
 clean:
-	rm -r ${CONFIG_DIR};
+	rm -f -r $(CONFIG_DIR)
 
 
 CONFIG_DIR:
