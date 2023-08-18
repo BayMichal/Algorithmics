@@ -18,6 +18,8 @@ Code:
 
 
 
+
+______________________________________________________
 ### Meet me on Linkedin!
-[![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn]([https://www.linkedin.com/](https://www.linkedin.com/in/micha%C5%82-bajkos-91b435189/)https://www.linkedin.com/in/micha%C5%82-bajkos-91b435189/)
-&nbsp;
+[![Linkedin](https://i.stack.imgur.com/gVE0j.png) LinkedIn](https://www.linkedin.com/in/micha%C5%82-bajkos-91b435189/)
+
