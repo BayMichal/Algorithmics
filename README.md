@@ -15,6 +15,9 @@ Code:
 ![image](https://github.com/BayMichal/Algorithmics/assets/93047454/42aa460b-780d-4a3f-85b8-d62eff55f404)
 
 
+## Self Powers (in progress)
+![image](https://github.com/BayMichal/Algorithmics/assets/93047454/b233774a-db68-432c-99b5-90edefa1c906)
+
 
 
 
