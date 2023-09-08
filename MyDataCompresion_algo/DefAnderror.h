@@ -1,19 +1,34 @@
-/**********************************************************************
-* Filename:   LOGIC.h
+/*******************************************************************
+* Filename:   DefAnderror.h
 * Author:     Michał Bajkos
-* Details:    Header file for LOGIC
-**********************************************************************/
+* Details:    Header file for errors and hard-coding macro
+*********************************************************************/
 
-#ifndef LOGIC_H_INCLUDED
-#define LOGIC_H_INCLUDED
-
-/*************************** HEADER FILES ****************************/
-
+#ifndef ERROR_H_INCLUDED
+#define ERROR_H_INCLUDED
 
 /*************************** DEFINES  ********************************/
-
+#define CONSOLE printf
+#define len     (120u)
+#define size    (50u)
 
 /***************************  DATA TYPES   ***************************/
+typedef uint8_t     u8;
+typedef uint32_t    u32;
+typedef long int    li;
+
+typedef struct{
+    li alfabet[size]; // a b c d 
+    li ileRazy[size]; // a -1 raz, b-2 razy itd
+    li ktoreMiejsce[size]; // bitowo index 1, a-1,4,5 miejsce, b=2,6 itd
+}str;
+
+typedef enum
+{
+    INCORECT_POINTER    = 0,
+
+}errorTypes;
+
 
 enum AsciiTable
 {
@@ -156,9 +171,4 @@ enum AsciiTable
 	Z_LOWER,                                         // z
 };
 
-/***************************  DATA DECLARE  **************************/
-
-/***************************  FUNCTIONS   ****************************/
-
-
-#endif // INTERN_H_INCLUDED
+#endif /* ERROR_H_INCLUDED */
