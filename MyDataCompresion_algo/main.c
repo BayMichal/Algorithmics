@@ -9,24 +9,35 @@
 #include "stdio.h"
 #include "stdint.h"
 #include "logic.h"
-//podaje do funkcji stringa, a ona zwraca adres na nowego odwróconego stringa
 
 
-#define len 50
+
+
+#define len 4
+#define size 50
 typedef uint8_t u8;
 typedef uint32_t u32;
+typedef long int li;
 
-char test[] =  "abbaaccdaababacdcdccadcdcaaadddadcccbcbcbcbdbdbac"; 
+char test[] =  "AqAAL"; 
 
 
 
 typedef struct{
-    u8 alfabet[4]; // a b c d 
-    u8 ileRazy[4]; // a -1 raz, b-2 razy itd
-    u32 ktoreMiejsce[4]; // bitowo index 1, a-1,4,5 miejsce, b=2,6 itd
+    li alfabet[size]; // a b c d 
+    li ileRazy[size]; // a -1 raz, b-2 razy itd
+    li ktoreMiejsce[size]; // bitowo index 1, a-1,4,5 miejsce, b=2,6 itd
 }str;
 
-
+typedef enum{
+    a_ = 'a',
+    b_ = 'b',
+    c_ = 'c',
+    d_ = 'd',
+    e_ = 'e',
+    f_ = 'f',
+    g_ = 'g',
+}asd;
 
 typedef enum{
     a = 0,
@@ -36,87 +47,95 @@ typedef enum{
 }alfabet;
 
 
+
+static u8 whichIs(char *ptr)
+{
+    u8 Value = 0;
+
+    switch(*ptr)
+    {
+        case 'a':
+            Value = 0;
+        break;
+
+        case 'A':
+            Value = 1;
+        break;
+        
+        case 'q':
+            Value = 2;
+        break;
+        
+        case 'v':
+            Value = 3;
+        break;
+        
+        case 'V':
+            Value = 4;
+        break;
+        
+        case 'f':
+            Value = 5;
+        break;
+        
+        case 'g':
+            Value = 6;
+        break;
+        
+        case 'h':
+            Value = 7;
+        break;
+        
+        case 'i':
+            Value = 8;
+        break;
+        
+    }
+
+    printf("\n DUPA char: %c, =  %d ", *ptr, Value);
+
+    return Value;
+}
+
 static int encode(char *wsk, str *data)
 {
     memset(data, 0x00, sizeof(str));
-    for(u8 i=0; i<len; i++)
-    {
-        if(wsk[i] == 'a')
+
+
+
+        u8 counter = 0;
+        for(u8 i=0; i<len; i++)
         {
-            data->alfabet[a] = 1;
-            data->ileRazy[a] += 1;
-            if(i == 0){
-                data->ktoreMiejsce[a] |= 1 << (i+1);
-            }
-            else
+            printf("\n CASE %c ", wsk[i]);
+
+            for(u8 j=_NULL; j<Z_LOWER; j++)
             {
-                data->ktoreMiejsce[a] |=  1 << (i+1);
+                if(wsk[counter] == j)
+                {
+                    u8 charT = whichIs(&wsk[counter]);
+                    data->alfabet[charT] = 1;
+                    data->ileRazy[charT] += 1;
+                    if(j == 0){
+                        data->ktoreMiejsce[charT] |= 1 << (i+1);
+                    }
+                    else
+                    {
+                        data->ktoreMiejsce[charT] |=  1 << (i+1);
+                    }
+                }
             }
+            
+
+            counter++;
         }
-        else if(wsk[i] == 'b')
-        {
-            data->alfabet[b] = 1;
-            data->ileRazy[b] += 1;
-            data->ktoreMiejsce[b] |= (i+1) << 1;
-            if(i == 0){
-                data->ktoreMiejsce[b] |= 1 << (i+1);
-            }
-            else
-            {
-                data->ktoreMiejsce[b] |=  1 << (i+1);
-            }
-        }
-        else if(wsk[i] == 'c')
-        {
+    
 
-            data->alfabet[c] = 1;
-            data->ileRazy[c] += 1;
-            if(i == 0){
-                data->ktoreMiejsce[c] |= 1 << (i+1);
-            }
-            else
-            {
-                data->ktoreMiejsce[c] |=  1 << (i+1);
-            }
-        }
-        else if(wsk[i] == 'd')
-        {
-            data->alfabet[d] = 1;
-            data->ileRazy[d] += 1;
-            if(i == 0){
-                data->ktoreMiejsce[d] |= 1 << (i+1);
-            }
-            else
-            {
-                data->ktoreMiejsce[d] |=  1 << (i+1);
-            }
-        }
-    }
-
-    // printf("\n czy istnieje a %d",  data->alfabet[a]);
-    // printf("\n ileRazy a %d",  data->ileRazy[a]);
-    // printf("\n pozycja w charze a (bitowo) %d \n",  data->ktoreMiejsce[a]);
-
-    // printf("\n czy istnieje b %d",  data->alfabet[b]);
-    // printf("\n ileRazy b %d",  data->ileRazy[b]);
-    // printf("\n pozycja w charze b (bitowo) %d \n",  data->ktoreMiejsce[b]);
-
-    // printf("\n czy istnieje c %d",  data->alfabet[c]);
-    // printf("\n ileRazy c %d",  data->ileRazy[c]);
-    // printf("\n pozycja w charze c (bitowo) %d\n",  data->ktoreMiejsce[c]);
-
-    // printf("\n czy istnieje d %d",  data->alfabet[d]);
-    // printf("\n ileRazy d %d",  data->ileRazy[d]);
-    // printf("\n pozycja w charze d (bitowo) %d\n",  data->ktoreMiejsce[d]);
-
-
-    //----------------------WYNIK
-    printf(" %d %d %d ", data->alfabet[a], data->ileRazy[a], data->ktoreMiejsce[a]);
-    printf(" %d %d %d ", data->alfabet[b], data->ileRazy[b], data->ktoreMiejsce[b]);
-    printf(" %d %d %d ", data->alfabet[c], data->ileRazy[c], data->ktoreMiejsce[c]);
-    printf(" %d %d %d ", data->alfabet[d], data->ileRazy[d], data->ktoreMiejsce[d]);
-
-    //----------------------------
+    //----------------------WYNIK---------------------------------------------------
+    printf(" %ld %ld %ld ", data->alfabet[a], data->ileRazy[a], data->ktoreMiejsce[a]);
+    printf(" %ld %ld %ld ", data->alfabet[b], data->ileRazy[b], data->ktoreMiejsce[b]);
+    printf(" %ld %ld %ld ", data->alfabet[c], data->ileRazy[c], data->ktoreMiejsce[c]);
+    printf(" %ld %ld %ld ", data->alfabet[d], data->ileRazy[c], data->ktoreMiejsce[c]);
+    //-----------------------------------------------------------------------------
     return 0;
 }
 
